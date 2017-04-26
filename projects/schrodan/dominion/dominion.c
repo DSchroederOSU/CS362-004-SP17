@@ -539,7 +539,7 @@ int drawCard(int player, struct gameState *state)
     state->deckCount[player] = state->discardCount[player];
     state->discardCount[player] = 0;//Reset discard
 
-    //Shufffle the deck
+    //Shuffle the deck
     shuffle(player, state);//Shuffle the deck up and make it so that we can draw
    
     if (DEBUG){//Debug statements
@@ -667,8 +667,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
   switch( card ) 
     {
     case adventurer:
-		playAdventurer(state, currentPlayer);
-
+		playAdventurer(state, handPos, currentPlayer);
+		return 0;
 			
     case council_room:
       //+4 Cards
@@ -812,9 +812,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return 0;
 		
     case smithy:
-
 		playSmithy(state, handPos, currentPlayer);		
-
+		return 0;
     
     case village:
       //+1 Card
@@ -880,10 +879,11 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 		
     case great_hall:
 		playGreatHall(state, handPos, currentPlayer);
+		return 0;
 		
     case minion:
         playMinion(state, handPos, currentPlayer, choice1, choice2);	
-    
+    	return 0;	
 
     case steward:
       if (choice1 == 1)
@@ -1086,19 +1086,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return 0;
 		
     case salvager:
-      //+1 buy
-      state->numBuys++;
-			
-      if (choice1)
-	{
-	  //gain coins equal to trashed card
-	  state->coins = state->coins + getCost( handCard(choice1, state) );
-	  //trash card
-	  discardCard(choice1, currentPlayer, state, 1);	
-	}
-			
-      //discard card
-      discardCard(handPos, currentPlayer, state, 0);
+ 		playSalvager(state, handPos, currentPlayer, choice1);
       return 0;
 		
     case sea_hag:
@@ -1255,7 +1243,7 @@ int updateCoins(int player, struct gameState *state, int bonus)
 //////////////////////////////BEGIN IMPLEMENTATION FOR ASSIGNMENT 2///////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-int playAdventurer(struct gameState *state, int currentPlayer){
+int playAdventurer(struct gameState *state, int handPos, int currentPlayer){
 	
 
     int temphand[MAX_HAND];// moved above the if statement
@@ -1266,17 +1254,23 @@ int playAdventurer(struct gameState *state, int currentPlayer){
 
 //this is a bug in the code where if there is only 1 treasure card in a players deck and discard,
 //this loop will never exit 
-
+	int shuffleFlag = 0;
 	while(numTreasuresDrawn<2){
-		if (state->deckCount[currentPlayer] < 1){//if the deck is empty we need to shuffle discard and add to deck
+		
+		if (state->deckCount[currentPlayer] < 1 && shuffleFlag == 0){//if the deck is empty we need to shuffle discard and add to deck
 	  		shuffle(currentPlayer, state);
+	  		shuffleFlag = 1;
 		}
 		
-		drawCard(currentPlayer, state);
-		cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
-	
-		if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+		int draw = drawCard(currentPlayer, state); 
+		if(draw >= 0)
+			cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1]; //top card of hand is most recently drawn card.
+		else
+			return 0; //deck is empty, only 1 treasure card was available
+		
+		if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold){	
 	  		numTreasuresDrawn++;
+	  		}
 		else{
 	  		temphand[temporaryHandIndex] = cardDrawn;
 	  		state->handCount[currentPlayer]--; //this should just remove the top card (the most recently drawn one).
@@ -1290,6 +1284,7 @@ int playAdventurer(struct gameState *state, int currentPlayer){
 		state->discard[currentPlayer][state->discardCount[currentPlayer]++] = temphand[temporaryHandIndex-1]; 	
 		temporaryHandIndex=temporaryHandIndex-1;
      	 }
+    	 discardCard(handPos, currentPlayer, state, 0);
       return 0;
 }//end playAdventurer
 
@@ -1303,7 +1298,7 @@ int playSmithy(struct gameState *state, int handPos, int currentPlayer){
 	}
 			
     //discard card from hand
-	state->numActions++;
+	//state->numActions++; //this is a bug
 
     discardCard(handPos, currentPlayer, state, 0);
 
@@ -1376,7 +1371,7 @@ int playGreatHall(struct gameState *state, int handPos, int currentPlayer){
     state->numActions++;
 
 	//INTRODUCE A BUG!//////////////////////
-	state->coins = state->coins + 1;
+	//state->coins = state->coins + 1;
 	///////////////////////////////////////
 			
     //discard card from hand
@@ -1386,6 +1381,8 @@ int playGreatHall(struct gameState *state, int handPos, int currentPlayer){
 
 
 int playSalvager(struct gameState *state, int handPos, int currentPlayer, int choice1){
+	int value = 0;
+
 	//+1 buy
     state->numBuys++;
 			
@@ -1394,15 +1391,15 @@ int playSalvager(struct gameState *state, int handPos, int currentPlayer, int ch
 	  //gain coins equal to trashed card
 
 	  //INTRODUCED BUG BY ADDING +1 TO THE STATE(COINS) FIELD IN ADDITION TO THE CARD VALUE	
-
-	  state->coins = state->coins + getCost( handCard(choice1, state) ) +1;
+		value = getCost( handCard(choice1, state) );
+	  state->coins = state->coins + getCost( handCard(choice1, state) ); // +1;
+	  
 	  //trash card
 	  discardCard(choice1, currentPlayer, state, 1);	
 	}
 			
     //discard card
     discardCard(handPos, currentPlayer, state, 0);
-    
 	return 0;
 }//end playSalvager
 
