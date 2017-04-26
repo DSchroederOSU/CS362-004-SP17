@@ -64,6 +64,7 @@ int testSmithy(struct gameState *state){
 }
 
 int main(int argc, char *argv[]){
+	printf("\n------------------------------\nSTARTING CARD TEST 2\n\n");
 	struct gameState G;
 
 	SelectStream(2);
@@ -75,9 +76,14 @@ int main(int argc, char *argv[]){
 	r = initializeGame(2, myk, 3, &G);
 	int test = testSmithy(&G);
 	
-	if(test == 0)	
+	if(test == 0){
+		printf("TEST SUCCESSFUL\n");
+		printf("\nEND OF CARD TEST 2\n------------------------------\n");
 		return 0;
-	return -1;
+	}
+	printf("TEST FAILED\n");
+	printf("\nEND OF CARD TEST 2\n------------------------------\n");
+	return 0;
 }
 
 

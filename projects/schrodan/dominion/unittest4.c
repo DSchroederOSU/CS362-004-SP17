@@ -25,21 +25,20 @@ int testGetCost(struct gameState *state){
 	//test all cards
 	int i; 
 	for(i = curse; i < treasure_map + 1; i++){
-		if(getCost(i) == values[i])
-			printf("TRUE\n");
-		else
-			printf("FALSE %d\n", i);
+		if(getCost(i) != values[i])
+			return 1;
 	}
 
 	//test that faulty value returns -1
-	if(getCost(100) == -1)
-		printf("TRUE\n");
+	if(getCost(100) != -1)
+		return 1;
 
 	return 0;
 }
 
 
 int main(int argc, char *argv[]){
+	printf("\n------------------------------\nSTARTING UNIT TEST 4\n\n");
 	struct gameState G;
 
 	SelectStream(2);
@@ -51,7 +50,15 @@ int main(int argc, char *argv[]){
 		
 	r = initializeGame(2, k, 3, &G);
 		
-	testGetCost(&G);				
+	
+	int test = testGetCost(&G);
+	if(test == 0){
+		printf("TEST SUCCESSFUL\n");
+		printf("\nEND OF UNIT TEST 4\n------------------------------\n");
+		return 0;
+	}
+	printf("TEST FAILED\n");
+	printf("\nEND OF UNIT TEST 4\n------------------------------\n");			
 	return 0;
 }
 

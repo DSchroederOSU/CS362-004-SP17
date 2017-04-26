@@ -48,7 +48,7 @@ int testHandCard(struct gameState *state){
 
 	//test what happens on a faulty index
 	int test = handCard(10, state);
-	printf("Bad index call returned: %d\n", test);
+		printf("This should be a non-valid index: %d\n", test);
 			
 
 
@@ -57,6 +57,8 @@ int testHandCard(struct gameState *state){
 }
 
 int main(int argc, char *argv[]){
+	printf("\n------------------------------\nSTARTING UNIT TEST 3\n\n");
+
 	struct gameState G;
 
 	SelectStream(2);
@@ -68,9 +70,14 @@ int main(int argc, char *argv[]){
 		
 	r = initializeGame(2, myk, 3, &G);
 		
-	if(testHandCard(&G) == 0)
-		printf("Tests Successful\n");
-			
+	int test = testHandCard(&G);
+	if(test == 0){
+		printf("TEST SUCCESSFUL\n");
+		printf("\nEND OF UNIT TEST 3\n------------------------------\n");
+		return 0;
+	}
+	printf("TEST FAILED\n");
+	printf("\nEND OF UNIT TEST 3\n------------------------------\n");
 	return 0;
 }
 

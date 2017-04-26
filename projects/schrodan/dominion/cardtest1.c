@@ -64,6 +64,7 @@ int testAdventurerNormal(struct gameState *state){
 
 //test function did not cover shuffle case
 int testAdventurerShuffle(struct gameState *state){
+	
 	//set the deck to 1 treasure card
 	//add 1 treasure card and 4 other cards to discard
 	state->deckCount[whoseTurn(state)] = 1; 
@@ -124,7 +125,6 @@ int testAdventurerOneTreasure(struct gameState *state){
 	state->deck[whoseTurn(state)][3] = village; 
 	state->deck[whoseTurn(state)][4] = village; 
 
-	printf("STARTING ONE TREASURE\n");
 	state->hand[whoseTurn(state)][0] = adventurer;
 	playCard(0, 0, 0, 0, state);
 	
@@ -138,6 +138,7 @@ int testAdventurerOneTreasure(struct gameState *state){
 
 
 int main(int argc, char *argv[]){
+	printf("\n------------------------------\nSTARTING CARD TEST 1\n\n");
 	struct gameState G;
 
 	SelectStream(2);
@@ -161,9 +162,14 @@ int main(int argc, char *argv[]){
 	r = initializeGame(2, myk, 3, &G);
 	test = testAdventurerOneTreasure(&G);
 	
-	if(test == 0)	
+	if(test == 0){
+		printf("TEST SUCCESSFUL\n");
+		printf("\nEND OF CARD TEST 1\n------------------------------\n");
 		return 0;
-	return 1;
+	}
+	printf("TEST FAILED\n");
+	printf("\nEND OF CARD TEST 1\n------------------------------\n");
+	return 0;
 }
 
 

@@ -36,31 +36,32 @@ int testSmithy(struct gameState *state){
 	//check that playCard worked
 	if(run < 0){
 		printf("playCard() Failed!\n");
-		return 1;	
+		 
 	}
 	
 	//assert that hand value decreased by 2
 	if((handSize - state->handCount[whoseTurn(state)]) != 2){
 		printf("Wrong number of cards in hand\n");
-		return 1;
+		 return 1;
 	}
  	
  	//assert that salvager was discarded
 	if(state->hand[whoseTurn(state)][0] == salvager){
 		printf("Salvager not discarded\n");
-		return 1;	
+		return 1;
 	}
 	
 	
 	//assert that coins increased by 3 (value of silver)
 	if((state->coins - coinsOld) != 1){
 		printf("Coins value is wrong\n");
-		return 1;		
+		return 1;
+		 	
 	}
 	
 	if(state->numBuys != (buysOld + 1)){
 		printf("Number of buys is wrong\n");
-		return 1;		
+		return 1; 		
 	}
 		
 
@@ -68,6 +69,7 @@ int testSmithy(struct gameState *state){
 }
 
 int main(int argc, char *argv[]){
+	printf("\n------------------------------\nSTARTING CARD TEST 4\n\n");
 	struct gameState G;
 
 	SelectStream(2);
@@ -79,9 +81,14 @@ int main(int argc, char *argv[]){
 	r = initializeGame(2, myk, 3, &G);
 	int test = testSmithy(&G);
 	
-	if(test == 0)	
+	if(test == 0){
+		printf("TEST SUCCESSFUL\n");
+		printf("\nEND OF CARD TEST 4\n------------------------------\n");
 		return 0;
-	return -1;
+	}
+	printf("TEST FAILED\n");
+	printf("\nEND OF CARD TEST 4\n------------------------------\n");
+	return 0;
 }
 
 

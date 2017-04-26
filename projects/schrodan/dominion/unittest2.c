@@ -80,7 +80,7 @@ void printDeck(struct gameState *game, int player){
 	}
 }
 
-void testBuyCard(struct gameState *post){
+int testBuyCard(struct gameState *post){
 	
 	post->coins = 50;
 	post->numBuys = 100; 
@@ -104,25 +104,28 @@ void testBuyCard(struct gameState *post){
 		count++;
 	}
 
-	if(assertCoins(&pre, post, cardsPurchased) == 0)
-		printf("Number of coins match\n");
+	if(assertCoins(&pre, post, cardsPurchased) != 0) return 1;
+		//printf("Number of coins match\n");
 	
-	if(assertBuys(&pre, post, count) == 0)	
-		printf("Number of buys match\n");
+	if(assertBuys(&pre, post, count) != 0)	return 1;
+		//printf("Number of buys match\n");
+		
+	return 0;
 }
 //this function asserts that buyCard fails when no buys are left
-void testBuyLimit(struct gameState *state){
+int testBuyLimit(struct gameState *state){
 	state->coins = 100;
 	state->numBuys = 1; 
 	
 	buyCard(getRandomCard(), state);
-	if(buyCard(getRandomCard(), state) == -1)
-		printf("Buy Limit Test Success\n");
+	if(buyCard(getRandomCard(), state) == -1) return 0;
+		//printf("Buy Limit Test Success\n");
+	return 1;
 
 }
 //this function asserts that buyCard fails when no card of  
 //a specific kind are available
-void testCardLimit(struct gameState *state){
+int testCardLimit(struct gameState *state){
 	state->coins = 1000;
 	state->numBuys = 1000; 
 	//kingdom cards
@@ -133,8 +136,8 @@ void testCardLimit(struct gameState *state){
 			for(j = 0; j < 8; j++){
 				buyCard(myk[i], state);
 			}
-			if(buyCard(myk[i], state) == -1)
-				printf("Card Limit Reached Return Value: %d\n", -1); 
+			if(buyCard(myk[i], state) != -1) return 1;
+				//printf("Card Limit Reached Return Value: %d\n", -1); 
 
 		}
 		//Regular Kingdom Card
@@ -142,39 +145,48 @@ void testCardLimit(struct gameState *state){
 			for(j = 0; j < 10; j++){
 				buyCard(myk[i], state);
 			}
-			if(buyCard(myk[i], state) == -1)
-				printf("Card Limit Reached Return Value: %d\n", -1); 
+			if(buyCard(myk[i], state) != -1) return 1;
+				//printf("Card Limit Reached Return Value: %d\n", -1); 
 		}
 	}//end kingdom cards 
+	return 0;
 		
 }
 
 
 int main(int argc, char *argv[]){
+	printf("\n------------------------------\nSTARTING UNIT TEST 2\n\n");
 	struct gameState G;
 
 	SelectStream(2);
 	PutSeed(3);
 	
-	int i, r;
+	int i, r, test1, test2, test3;
 	
 	for(i = 0; i < MAX_DECK; i++){
 		memset(&G, 23, sizeof(struct gameState));
 		
 		r = initializeGame(2, myk, i+2, &G);
 		
-		testBuyCard(&G);
+		test1 = testBuyCard(&G);
 			
 	}
 	
 	memset(&G, 23, sizeof(struct gameState));
 	r = initializeGame(2, myk, 20, &G);
-	testCardLimit(&G);
+	test2 = testCardLimit(&G);
 	
 	memset(&G, 23, sizeof(struct gameState));
 	r = initializeGame(2, myk, 5, &G);
-	testBuyLimit(&G);
+	test3 = testBuyLimit(&G);
 	
+	if(test1 == 0 && test2 == 0 && test3 == 0){
+		printf("TEST SUCCESSFUL\n");
+		printf("\nEND OF UNIT TEST 2\n------------------------------\n");
+		return 0;
+	}
+	printf("TEST FAILED\n");
+	printf("\nEND OF UNIT TEST 2\n------------------------------\n");
 	return 0;
 }
 

@@ -21,11 +21,11 @@ int assert_equals(struct gameState *first , struct gameState *last, int player){
 	 	//first->deck[player][i], i, last->deck[player][i]);
 		
 		if(first->deck[player][i] != last->deck[player][i]){
-			printf("Difference at index %d\n", i);
+			//printf("Difference at index %d\n", i);
 			return 0;
 		}
 	}	
-	printf("No Differences in Decks\n");
+	//printf("No Differences in Decks\n");
 	return 1;
 }
 
@@ -36,20 +36,24 @@ void printDeck(struct gameState *game, int player){
 	
 	}
 }
-void testShuffle(int player, struct gameState *post){
+int testShuffle(int player, struct gameState *post){
 	struct gameState pre;
 	memcpy(&pre, post, sizeof(struct gameState));
 
 
 	int test;
 	test = shuffle(player, post);
-	if(test == 0 && pre.deckCount > 0)
-		assert_equals(&pre, post, 1);	
+	if(test == 0 && pre.deckCount > 0){
+		int t = assert_equals(&pre, post, 1);	
+		if(t ==0) return 0;
+	}
+	return 1;
 }
 
 
 
 int main(int argc, char *argv[]){
+	printf("\n------------------------------\nSTARTING UNIT TEST 1\n\n");
 	struct gameState G;
 
 	int k[10] = {adventurer, council_room, feast, gardens, mine, remodel,
@@ -58,7 +62,7 @@ int main(int argc, char *argv[]){
 	SelectStream(2);
 	PutSeed(3);
 	
-	int i, r;
+	int i, r, test;
 	
 	for(i = 0; i < MAX_DECK; i++){
 		memset(&G, 23, sizeof(struct gameState));
@@ -71,8 +75,15 @@ int main(int argc, char *argv[]){
 			G.deck[1][k] = floor(Random() * 12);
 		}
 		
-		testShuffle(1, &G);
+		test = testShuffle(1, &G);
 	}
+	if(test == 0){
+		printf("TEST SUCCESSFUL\n");
+		printf("\nEND OF UNIT TEST 1\n------------------------------\n");
+		return 0;
+	}
+	printf("TEST FAILED\n");
+	printf("\nEND OF UNIT TEST 1\n------------------------------\n");
 	return 0;
 }
 
