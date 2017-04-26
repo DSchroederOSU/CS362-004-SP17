@@ -43,11 +43,17 @@ int testGreatHall(struct gameState *state){
 		return 1;
 	}
  	
- 	//assert that smithy was discarded
+ 	//assert that great_hall was discarded
 	if(state->hand[whoseTurn(state)][0] == great_hall){
-		printf("Smithy not discarded\n");
+		printf("great_hall not discarded\n");
 		return 1;	
 	}
+	
+	//assert that coins value stayed the same
+	if(coinsOld != state->coins){
+		printf("Coins value changed\n");
+	}
+ 	
 	
 	//assert deck decreased by 1 
 	if(state->deckCount[whoseTurn(state)] != (deckSize - 1)){
@@ -76,7 +82,6 @@ int testGreatHall(struct gameState *state){
 	//ASSERT THAT COINS do not change
 	if((coinsOld + newCoins) != state->coins){
 		printf("Coins did not remain the same\n");
-		return 1;
 	}
 
 	return 0;

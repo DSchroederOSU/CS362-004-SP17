@@ -4,7 +4,6 @@ Daniel Schroeder
 This is a unit test for the dominion function getCost()
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1284,7 +1284,7 @@ int playAdventurer(struct gameState *state, int handPos, int currentPlayer){
 		state->discard[currentPlayer][state->discardCount[currentPlayer]++] = temphand[temporaryHandIndex-1]; 	
 		temporaryHandIndex=temporaryHandIndex-1;
      	 }
-    	 discardCard(handPos, currentPlayer, state, 0);
+    	 //discardCard(handPos, currentPlayer, state, 0);
       return 0;
 }//end playAdventurer
 
@@ -1300,7 +1300,8 @@ int playSmithy(struct gameState *state, int handPos, int currentPlayer){
     //discard card from hand
 	//state->numActions++; //this is a bug
 
-    discardCard(handPos, currentPlayer, state, 0);
+	//THIS IS THE NEW BUG
+    //discardCard(handPos, currentPlayer, state, 0);
 
 	return 0;
 }//end playSmithy
@@ -1371,7 +1372,7 @@ int playGreatHall(struct gameState *state, int handPos, int currentPlayer){
     state->numActions++;
 
 	//INTRODUCE A BUG!//////////////////////
-	//state->coins = state->coins + 1;
+	state->coins = state->coins + 1;
 	///////////////////////////////////////
 			
     //discard card from hand

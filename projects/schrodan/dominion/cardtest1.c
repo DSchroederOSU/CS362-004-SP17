@@ -44,7 +44,7 @@ int testAdventurerNormal(struct gameState *state){
  	//assert that adventurer was discarded
 	if(state->hand[whoseTurn(state)][0] == 7){
 		printf("Adventurer not discarded\n");
-		return 1;	
+		
 	}
 	
 	//assert deck decreased by 2 and hand increased by 1

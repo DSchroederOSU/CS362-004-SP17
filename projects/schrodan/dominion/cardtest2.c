@@ -38,13 +38,11 @@ int testSmithy(struct gameState *state){
 	//assert that hand value increased
 	if((state->handCount[whoseTurn(state)] - handSize) != 2){
 		printf("Wrong number of cards in hand\n");
-		return 1;
 	}
  	
- 		//assert that smithy was discarded
+  	//assert that smithy was discarded
 	if(state->hand[whoseTurn(state)][0] == smithy){
 		printf("Smithy not discarded\n");
-		return 1;	
 	}
 	
 	//assert deck decreased by 2 and hand increased by 1
