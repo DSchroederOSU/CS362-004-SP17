@@ -66,10 +66,7 @@ int testplayGreatHall(int p, struct gameState *post) {
 		badcoin++;
 	
 		
-	return 0;
-  
-	//test = playAdventurer(post, indexof, p);
-  
+	return 0; 
 }
 
 
