@@ -1251,7 +1251,8 @@ int playAdventurer(struct gameState *state, int handPos, int currentPlayer){
     int cardDrawn;
 	int temporaryHandIndex = 0;// this is the counter for the temp hand
 
-
+	
+	int count = 0;
 //this is a bug in the code where if there is only 1 treasure card in a players deck and discard,
 //this loop will never exit 
 	int shuffleFlag = 0;
@@ -1260,30 +1261,35 @@ int playAdventurer(struct gameState *state, int handPos, int currentPlayer){
 		if (state->deckCount[currentPlayer] < 1 && shuffleFlag == 0){//if the deck is empty we need to shuffle discard and add to deck
 	  		shuffle(currentPlayer, state);
 	  		shuffleFlag = 1;
+	  		
 		}
 		
 		int draw = drawCard(currentPlayer, state); 
 		if(draw >= 0)
 			cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1]; //top card of hand is most recently drawn card.
 		else
-			return 0; //deck is empty, only 1 treasure card was available
+			break; //deck is empty, only 1 treasure card was available
 		
 		if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold){	
 	  		numTreasuresDrawn++;
+	  		
 	  		}
 		else{
 	  		temphand[temporaryHandIndex] = cardDrawn;
 	  		state->handCount[currentPlayer]--; //this should just remove the top card (the most recently drawn one).
 	  		temporaryHandIndex++;
 		}
+		count++;
+		//printf("iteration: %d\n", count);
     }//end while treasures less than 2
-
+		
       
 		while(temporaryHandIndex-1>=0){
 		// discard all cards in play that have been draw
 		state->discard[currentPlayer][state->discardCount[currentPlayer]++] = temphand[temporaryHandIndex-1]; 	
 		temporaryHandIndex=temporaryHandIndex-1;
      	 }
+     	 
     	 //discardCard(handPos, currentPlayer, state, 0);
       return 0;
 }//end playAdventurer
@@ -1296,12 +1302,9 @@ int playSmithy(struct gameState *state, int handPos, int currentPlayer){
 	{
 		drawCard(currentPlayer, state);
 	}
-			
-    //discard card from hand
-	//state->numActions++; //this is a bug
 
 	//THIS IS THE NEW BUG
-    //discardCard(handPos, currentPlayer, state, 0);
+    discardCard(handPos, currentPlayer, state, 0);
 
 	return 0;
 }//end playSmithy
@@ -1315,10 +1318,11 @@ int playMinion(struct gameState *state, int handPos, int currentPlayer, int choi
     state->numActions++;
 			
     //discard card from hand
-    discardCard(handPos, currentPlayer, state, 0);
+    //discardCard(handPos, currentPlayer, state, 0);
 			
     if (choice1)		//+2 coins
 	{
+		printf("REACHED");
 	  state->coins = state->coins + 2;
 	}
 			
