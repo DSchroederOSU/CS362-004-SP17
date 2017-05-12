@@ -1244,26 +1244,19 @@ int updateCoins(int player, struct gameState *state, int bonus)
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 int playAdventurer(struct gameState *state, int handPos, int currentPlayer){
-	
-
     int temphand[MAX_HAND];// moved above the if statement
     int numTreasuresDrawn = 0;
     int cardDrawn;
 	int temporaryHandIndex = 0;// this is the counter for the temp hand
-
-	
 	int count = 0;
 //this is a bug in the code where if there is only 1 treasure card in a players deck and discard,
 //this loop will never exit 
 	int shuffleFlag = 0;
 	while(numTreasuresDrawn<2){
-		
 		if (state->deckCount[currentPlayer] < 1 && shuffleFlag == 0){//if the deck is empty we need to shuffle discard and add to deck
 	  		shuffle(currentPlayer, state);
 	  		shuffleFlag = 1;
-	  		
 		}
-		
 		int draw = drawCard(currentPlayer, state); 
 		if(draw >= 0)
 			cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1]; //top card of hand is most recently drawn card.
@@ -1272,7 +1265,6 @@ int playAdventurer(struct gameState *state, int handPos, int currentPlayer){
 		
 		if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold){	
 	  		numTreasuresDrawn++;
-	  		
 	  		}
 		else{
 	  		temphand[temporaryHandIndex] = cardDrawn;
@@ -1282,14 +1274,11 @@ int playAdventurer(struct gameState *state, int handPos, int currentPlayer){
 		count++;
 		//printf("iteration: %d\n", count);
     }//end while treasures less than 2
-		
-      
 		while(temporaryHandIndex-1>=0){
 		// discard all cards in play that have been draw
 		state->discard[currentPlayer][state->discardCount[currentPlayer]++] = temphand[temporaryHandIndex-1]; 	
 		temporaryHandIndex=temporaryHandIndex-1;
      	 }
-     	 
     	 //discardCard(handPos, currentPlayer, state, 0);
       return 0;
 }//end playAdventurer
