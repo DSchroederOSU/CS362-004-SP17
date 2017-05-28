@@ -720,7 +720,6 @@ void Smithy(struct gameState *state, int handPos) {
 	//+3 Cards
       for (i = 0; i < 3; i++)
 	{
-		printf("DRAWING\n");
 	  drawCard(currentPlayer, state);
 	}
 			
@@ -906,7 +905,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 		
     case smithy:
        Smithy(state, handPos);
-       
+       return 0;
     case village:
       //+1 Card
       drawCard(currentPlayer, state);

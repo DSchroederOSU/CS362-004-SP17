@@ -10,7 +10,7 @@
 
 #define DEBUG 0
 #define NOISY_TEST 1
-
+int success = 0;
 int k[10] = {adventurer, council_room, feast, gardens, mine,
 		   remodel, smithy, village, baron, great_hall};
 
@@ -39,18 +39,24 @@ void printDiscard(int player, struct gameState *game){
 int assertSmithy(struct gameState *pre, struct gameState *post, int p){
 	if(pre->deckCount[p] > 2){
 		if(post->deckCount[p] != (pre->deckCount[p] - 3)){
+			printf("deckCount before: %d\n", pre->deckCount[p]);
+			printf("deckCount after: %d\n", post->deckCount[p]);
+			
 			printf("Test Failed: 3 cards not drawn from deck\n");
 			return 1;
 		}
 	}
 	else if((pre->deckCount[p] + pre->discardCount[p]) > 2){
 		if((post->deckCount[p] + post->discardCount[p]) != (pre->deckCount[p] + pre->discardCount[p] - 3)){
+			printf("deckCount before: %d\n", pre->deckCount[p]);
 			printf("Test Failed: 3 cards not drawn from deck\n");
 			return 1;
 		}
 	}
 	if(post->handCount[p] != pre->handCount[p] + 2)
 		printf("New handcount: %d Old handcount: %d\n", post->handCount[p], pre->handCount[p]);	
+	
+	success++;
 	return 0;
 
 
@@ -77,9 +83,8 @@ int testSmithy(int p, struct gameState *post) {
 	memcpy(&pre, post, sizeof(struct gameState));
 
 	post->hand[p][0] = 13; //give player a smithy
-	playSmithy(post, 0, p);
-	
-	assertSmithy(&pre, post, p);
+	int run = playCard(0, 0, 0, 0, post);
+	assertSmithy(&pre, post, whoseTurn(post));
 
 	return 0;
 
@@ -108,6 +113,6 @@ int main () {
 			G.hand[p][index] = 7; //give player adventurer at random index
 			testSmithy(p, &G);
 	}
-
+	printf("Total successes: %d\n", success);
 	return 0;
 }
